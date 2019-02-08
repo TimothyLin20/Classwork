@@ -1,1 +1,2 @@
-print("St. Robert Catholic High School\n8101 Leslie St.\nThornhill, ON\nL3T 7P4\n905-889-4982")
+name, address, city, province, postal_code, telephone = "St. Robert Catholic High School", "8101 Leslie St.", "Thornhill" , "ON",  "L3T 7P4", "905-889-4982"
+print(name + "\n" + address + "\n" + city + "," + province+ "\n" + postal_code + "\n" + telephone)
