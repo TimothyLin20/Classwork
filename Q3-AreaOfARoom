@@ -1,0 +1,10 @@
+unit = None
+while unit!="m" and unit!="ft":
+    print("Please enter your preferred unit: 'm' (meters) or 'ft' (feet)")
+    unit = input()
+print("Please enter the width of the room:")
+width = float(input())
+print("Please enter the length of the room:")
+length = float(input())
+area = width*length
+print("The area of the room is "+str(area)+" meters squared." if unit=="m" else "The area of the room is "+str(area)+" feet squared.")
