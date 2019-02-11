@@ -1,0 +1,8 @@
+print("Please enter the cost of the meal in dollars:") 
+meal = int(input())
+tax = meal*0.14
+tip = meal*0.18
+grand_total = meal+tax+tip
+print(f"The tip amount is $%.2f."%tip)
+print(f"The tax amount is $%.2f."%tax)
+print(f"The grand total of the meal is $%.2f."%grand_total)
