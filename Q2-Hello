@@ -1,3 +1,12 @@
 print("Please enter your name:")
 name = input()
 print(f"Hello {name}")
+print("How was your day? Good or Bad?")
+response = input()
+while response!="Good" and response!="Bad" :
+  print("Please type 'Good' or 'Bad'")
+  response = input()
+if response=="Good" :
+  print("Great!")
+elif response=="Bad":
+  print("Don't worry, it will get better.")
