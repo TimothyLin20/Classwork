@@ -10,16 +10,17 @@ arcade.start_render()
 #sun
 arcade.draw_circle_filled(540, 380, 50, arcade.color.YELLOW)
 #grass
-arcade.draw_rectangle_filled(320,50, 640, 100, arcade.color.GREEN)
+arcade.draw_lrtb_rectangle_filled(0, 640, 100, 0, arcade.color.GREEN)
 #left tree
-arcade.draw_triangle_filled(170, 150, 250, 150, 210, 225, arcade.color.DARK_GREEN)
-arcade.draw_lrtb_rectangle_filled(200, 220, 150, 75, arcade.color.BROWN)
+arcade.draw_triangle_filled(170, 125, 250, 125, 210, 200, arcade.color.DARK_GREEN)
+#arcade.draw_lrtb_rectangle_filled(200, 220, 150, 75, arcade.color.BROWN)
+arcade.draw_lrtb_rectangle_filled(200, 220, 125, 50, arcade.color.BROWN)
 #middle tree
-arcade.draw_triangle_filled(380, 150, 460, 150, 420, 225, arcade.color.DARK_GREEN)
-arcade.draw_lrtb_rectangle_filled(410, 430, 150, 75, arcade.color.BROWN)
+arcade.draw_triangle_filled(380, 125, 460, 125, 420, 200, arcade.color.DARK_GREEN)
+arcade.draw_lrtb_rectangle_filled(410, 430, 125, 50, arcade.color.BROWN)
 #right tree
-arcade.draw_triangle_filled(455, 150, 535, 150, 495, 225, arcade.color.DARK_GREEN)
-arcade.draw_lrtb_rectangle_filled(485, 505, 150, 75, arcade.color.BROWN)
+arcade.draw_triangle_filled(455, 125, 535, 125, 495, 200, arcade.color.DARK_GREEN)
+arcade.draw_lrtb_rectangle_filled(485, 505, 125, 50, arcade.color.BROWN)
 
 arcade.finish_render()
 arcade.run()
