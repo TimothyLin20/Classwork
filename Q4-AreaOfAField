@@ -1,6 +1,4 @@
-print("Please enter the width of the field in feet:")
-width = float(input())
-print("Please enter the length of the field in feet:")
-length = float(input())
+width = float(input("Please enter the width of the field in feet:"))
+length = float(input("Please enter the length of the field in feet:"))
 acres = (width*length)/43560
 print("The area of the field is " + str(acres) + " acres.")
