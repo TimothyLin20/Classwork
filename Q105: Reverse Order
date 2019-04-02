@@ -1,0 +1,6 @@
+value = int(input())
+integers = []
+while value != 0:
+  integers.append(value)
+  value = int(input())
+print(integers[::-1])
