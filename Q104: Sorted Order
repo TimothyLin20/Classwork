@@ -1,0 +1,7 @@
+value = int(input())
+integers = []
+while value != 0:
+  integers.append(value)
+  value = int(input())
+integers.sort()
+print(integers)
