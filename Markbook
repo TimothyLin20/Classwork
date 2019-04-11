@@ -60,8 +60,8 @@ while True:
                 top_student = student
         print(f"Top Student: {top_student} Mark: {top_mark}")
     elif choice == 8:
-        print("Students/Marks")
+        print("Student-Mark")
         for student in marks:
-            print(student, marks[student])
+            print(f"{student}-{marks[student]}")
     elif choice == 9:
         break
