@@ -18,58 +18,50 @@ print("2 - Remove Student")
 print("3 - Change Student Name")
 print("4 - Change Student Mark")
 print("5 - Class Average")
-print("6 - At-Risk Students (mark <=65)")
+print("6 - At-Risk Students (Mark <= 65)")
 print("7 - Top Mark")
 print("8 - Report of Class")
 print("9 - Exit")
 
 while True:
-    choice = int(input("Menu choice: "))
+    choice = int(input("\nMenu choice: "))
 
     if choice == 1:
         student = input("Please enter student name: ")
         mark = int(input("Please enter student mark: "))
         marks[student] = mark
-
     elif choice == 2:
         student = input("Please enter student name: ")
         marks.pop(student)
-
     elif choice == 3:
         student = input("Please enter student name to change: ")
         mark = marks[student]
         marks.pop(student)
         new_name = input("Please enter new student name: ")
         marks[new_name] = mark
-
     elif choice == 4:
         student = input("Please enter student name: ")
         marks.pop(student)
         new_mark = input("Please enter new student mark: ")
         marks[student] = new_mark
-
     elif choice == 5:
         for student in marks:
             avg += marks[student]
         print(avg / len(marks))
-
     elif choice == 6:
         for student in marks:
             if marks[student] <= 65:
                 at_risk.append(student)
         print(f"Students at risk: {at_risk}")
-
     elif choice == 7:
         for student in marks:
             if marks[student] > top_mark:
                 top_mark = marks[student]
                 top_student = student
         print(f"Top Student: {top_student} Mark: {top_mark}")
-
     elif choice == 8:
         print("Students/Marks")
         for student in marks:
             print(student, marks[student])
-
     elif choice == 9:
         break
