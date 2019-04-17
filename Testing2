@@ -4,7 +4,7 @@ WIDTH = 640
 HEIGHT = 960
 
 mapWidth = 28 * 20
-mapHeight = 15 * 20
+mapHeight = 32 * 20
 map = [
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
     "%............%%............%",
@@ -37,45 +37,29 @@ map = [
     "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
     "%..........................%",
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-
-
-
 ]
-"""
-%%.%.%%%...%,
-    "%%%.%...%.%.........%.%...%.%%%",
-    "%...%.%%%.%.%%% %%%.%.%%%.%...%",
-    "%.%%%.......%GG GG%.......%%%.%",
-    "%...%.%%%.%.%%%%%%%.%.%%%.%...%",
-    "%%%.%...%.%.........%.%...%.%%%",
-    "%...%%%.%.%%%%.%.%%%%.%.%%%...%",
-    "%.%.....%......%......%.....%.%",
-    "%o%%%.%.%%%.%%%%%%%.%%%.%.%%%o%",
-    "%.....%........P........%.....%",
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-"""
-
 
 def update(delta_time):
     pass
 
-
-def draw_map(i, x, y):
-    if i == "%":
-        # arcade.draw_xywh_rectangle_outline(x, y*20, 20, 20, arcade.color.BLUE, 1)
-        arcade.draw_lrtb_rectangle_filled(x, x + 20, HEIGHT - (y * 20), HEIGHT - 2 * (y * 20), arcade.color.BLUE)
-    if i == ".":
-        arcade.draw_circle_filled(x, y, 1, arcade.color.WHITE)
-
-
 def on_draw():
     arcade.start_render()
-    for y, row in enumerate(map):
+    global mapHeight
+
+    y = mapHeight
+
+    for row in map:
         x = 0
-        for i in row:
-            print(i, x, 15 - y)
-            draw_map(i, x, 15 - y)
+        for element in row:
+            print(element, x, y)
+
+            if element == "%":
+                arcade.draw_lrtb_rectangle_filled(x, x + 20, y, y - 20, arcade.color.BLUE)
+            elif element == ".":
+                arcade.draw_circle_filled(x+10, y+10, 3, arcade.color.WHITE)
+
             x += 20
+        y -= 20
 
 
 def on_key_press(key, modifiers):
@@ -93,6 +77,7 @@ def on_mouse_press(x, y, button, modifiers):
 def setup():
     arcade.open_window(WIDTH, HEIGHT, "My Arcade Game")
     arcade.set_background_color(arcade.color.BLACK)
+
     arcade.schedule(update, 1 / 60)
 
     # Override arcade window methods
