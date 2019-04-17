@@ -57,6 +57,8 @@ def on_draw():
                 arcade.draw_lrtb_rectangle_filled(x, x + 20, y, y - 20, arcade.color.BLUE)
             elif element == ".":
                 arcade.draw_circle_filled(x+10, y+10, 3, arcade.color.WHITE)
+            elif element == "o":
+                arcade.draw_circle_filled(x + 10, y + 10, 7, arcade.color.WHITE)
 
             x += 20
         y -= 20
