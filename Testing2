@@ -1,7 +1,7 @@
 import arcade
 
-WIDTH = 640
-HEIGHT = 960
+WIDTH = 560
+HEIGHT = 620
 
 mapWidth = 28 * 20
 mapHeight = 32 * 20
@@ -13,7 +13,7 @@ map = [
     "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
     "%..........................%",
     "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
-    "%.%%%%.%%.%%%%%%%%.%%.%%%%.%"
+    "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
     "%......%%....%%....%%......%",
     "%%%%%%.%%%%%-%%-%%%%%.%%%%%%",
     "-----%.%%%%%-%%-%%%%%.%-----",
@@ -54,11 +54,16 @@ def on_draw():
             print(element, x, y)
 
             if element == "%":
-                arcade.draw_lrtb_rectangle_filled(x, x + 20, y, y - 20, arcade.color.BLUE)
+                arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 20, y - 40, arcade.color.BLUE)
+
             elif element == ".":
-                arcade.draw_circle_filled(x+10, y+10, 3, arcade.color.WHITE)
+                arcade.draw_circle_filled(x + 10, y - 30, 3, arcade.color.WHITE)
+
             elif element == "o":
-                arcade.draw_circle_filled(x + 10, y + 10, 7, arcade.color.WHITE)
+                arcade.draw_circle_filled(x + 10, y - 30, 7, arcade.color.WHITE)
+
+            elif element == "=":
+                arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 25, y - 35, arcade.color.WHITE)
 
             x += 20
         y -= 20
@@ -77,7 +82,7 @@ def on_mouse_press(x, y, button, modifiers):
 
 
 def setup():
-    arcade.open_window(WIDTH, HEIGHT, "My Arcade Game")
+    arcade.open_window(WIDTH, HEIGHT, "Pacman")
     arcade.set_background_color(arcade.color.BLACK)
 
     arcade.schedule(update, 1 / 60)
