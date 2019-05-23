@@ -72,7 +72,7 @@ class Map(arcade.Window):
             for element in row:
 
                 if element == "." or element == "o" or element == "-" or element == "G":
-                    arcade.draw_lrtb_rectangle_filled(x - 5, x + 25, y - 5, y - 35, arcade.color.BLACK)
+                    arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.BLACK)
 
                 elif element == "=":
                     arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.WHITE)
