@@ -30,6 +30,7 @@ class Ghost(arcade.Window):
         pass
 
     def next_step(self):
+        #choose next move until hit wall
         pass
 
 class Map(arcade.Window):
