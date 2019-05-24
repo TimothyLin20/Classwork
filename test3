@@ -160,7 +160,7 @@ class Player(arcade.Window):
 class MyGame(arcade.Window):
 
     def setup(self):
-        arcade.set_background_color(arcade.color.BLUE)
+        arcade.set_background_color(arcade.color.BLACK)
 
         map = Map()
         player = Player()
