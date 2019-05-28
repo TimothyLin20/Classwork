@@ -166,6 +166,7 @@ class Player(arcade.Window):
 class MyGame(arcade.Window):
     player = Player()
     map = Map()
+    ghost = Ghost()
 
     def setup(self):
 
