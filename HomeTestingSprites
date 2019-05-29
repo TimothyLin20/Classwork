@@ -13,6 +13,40 @@ down_pressed = False
 left_pressed = False
 right_pressed = False
 
+map = [
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+    "%............%%............%",
+    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+    "%..........................%",
+    "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
+    "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
+    "%......%%....%%....%%......%",
+    "%%%%%%.%%%%%-%%-%%%%%.%%%%%%",
+    "-----%.%%%%%-%%-%%%%%.%-----",
+    "-----%.%%----------%%.%-----",
+    "-----%.%%-%%%==%%%-%%.%-----",
+    "%%%%%%.%%-%G----G%-%%.%%%%%%",
+    "------.---%------%---.------",
+    "%%%%%%.%%-%G----G%-%%.%%%%%%",
+    "-----%.%%-%%%%%%%%-%%.%-----",
+    "-----%.%%----------%%.%-----",
+    "-----%.%%-%%%%%%%%-%%.%-----",
+    "%%%%%%.%%-%%%%%%%%-%%.%%%%%%",
+    "%............%%............%",
+    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+    "%...%%.......--.......%%...%",
+    "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
+    "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
+    "%......%%....%%....%%......%",
+    "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
+    "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
+    "%..........................%",
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+]
+
 class Ghost(arcade.Window):
     def __init__(self):
         super().__init__()
@@ -37,40 +71,8 @@ class Ghost(arcade.Window):
         pass
 
 
+
 class Map(arcade.Window):
-    map = [
-        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-        "%............%%............%",
-        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-        "%..........................%",
-        "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
-        "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
-        "%......%%....%%....%%......%",
-        "%%%%%%.%%%%%-%%-%%%%%.%%%%%%",
-        "-----%.%%%%%-%%-%%%%%.%-----",
-        "-----%.%%----------%%.%-----",
-        "-----%.%%-%%%==%%%-%%.%-----",
-        "%%%%%%.%%-%G----G%-%%.%%%%%%",
-        "------.---%------%---.------",
-        "%%%%%%.%%-%G----G%-%%.%%%%%%",
-        "-----%.%%-%%%%%%%%-%%.%-----",
-        "-----%.%%----------%%.%-----",
-        "-----%.%%-%%%%%%%%-%%.%-----",
-        "%%%%%%.%%-%%%%%%%%-%%.%%%%%%",
-        "%............%%............%",
-        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-        "%...%%.......--.......%%...%",
-        "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
-        "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
-        "%......%%....%%....%%......%",
-        "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
-        "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
-        "%..........................%",
-        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-    ]
 
     def __init__(self):
         super().__init__()
@@ -82,9 +84,8 @@ class Map(arcade.Window):
         self.food_list = arcade.SpriteList()
 
         self.setup()
-        self.on_draw()
 
-    def on_draw(self):
+    def draw_map(self):
         global MAP_HEIGHT, map
         arcade.start_render()
 
@@ -94,17 +95,19 @@ class Map(arcade.Window):
             x = 0
             for element in row:
 
-                if element == "." or element == "o" or element == "-" or element == "G":
+                if element == "." or element == "-" or element == "G":
                     arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.BLACK)
-
+                    if element == ".":
+                        self.food_list.draw()
                 elif element == "=":
                     arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.WHITE)
-
+                elif element == "%":
+                    self.brick_list.draw()
                 x += 20
             y -= 20
 
     def setup(self):
-        global MAP_HEIGHT
+        global MAP_HEIGHT, map
 
         y = MAP_HEIGHT
 
@@ -112,20 +115,22 @@ class Map(arcade.Window):
             x = 0
             for element in row:
                 if element == "%":
-                    brick = arcade.Sprite(scale=0.5)
-                    brick.append_texture()  # choose image
+                    brick_scale = 0.01
+                    brick = arcade.Sprite("images/blue.png", brick_scale)
+
                     brick.center_x = x + 10
                     brick.center_y = y - 10
 
                     self.brick_list.append(brick)
 
                 elif element == ".":
-                    food = arcade.Sprite(scale=0.5)
-                    food.append_texture()  # choose image
+                    food_scale = 0.03
+                    food = arcade.Sprite("images/food.png", food_scale)
+
                     food.center_x = x + 10
                     food.center_y = y - 10
 
-                    self.food_list.append(self, food)
+                    self.food_list.append(food)
 
                 x += 20
             y -= 20
@@ -134,20 +139,17 @@ class Player(arcade.Window):
 
     def __init__(self):
         super().__init__()
-
-        self.player = arcade.Sprite()
+        character_scale = 0.1
+        self.player = arcade.Sprite("images/pacman.png", character_scale)
         self.setup()
         self.draw()
 
     def setup(self):
         self.score = 0
-        character_scale = 1
-        self.player.append_texture("images/pacman.png")
         self.player.center_x = 270
         self.player.center_y = 180
-
     def draw(self):
-        pass
+        self.player.draw()
 
     def move(self, direction, movement):
 
@@ -166,27 +168,13 @@ class Player(arcade.Window):
 class MyGame(arcade.Window):
     player = Player()
     map = Map()
-    ghost = Ghost()
 
     def setup(self):
 
         arcade.set_background_color(arcade.color.BLUE)
         arcade.schedule(self.update, 1 / 60)
 
-        # map = Map()
-        # player = Player()
-
-        """
-        arcade.schedule(update, 1 / 60)
-
-        # Override arcade window methods
-        window = arcade.get_window()
-        window.on_draw = on_draw
-        window.on_key_press = on_key_press
-        window.on_key_release = on_key_release
-
         arcade.run()
-        """
 
     def update(delta_time):
         global map
@@ -201,8 +189,8 @@ class MyGame(arcade.Window):
 
     def on_draw(self):
         global player, map
-        player.draw()
-        map.draw_map()
+        self.player.draw()
+        self.map.draw_map()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
