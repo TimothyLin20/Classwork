@@ -8,11 +8,6 @@ MOVEMENT_SPEED = 10
 MAP_WIDTH = 28 * 20
 MAP_HEIGHT = 32 * 20
 
-up_pressed = False
-down_pressed = False
-left_pressed = False
-right_pressed = False
-
 map = [
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
     "%............%%............%",
@@ -47,7 +42,7 @@ map = [
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
 ]
 
-class Ghost(arcade.Window):
+class Ghost(arcade.Sprite):
     def __init__(self):
         super().__init__()
 
@@ -70,9 +65,7 @@ class Ghost(arcade.Window):
         # choose next move until hit wall
         pass
 
-
-
-class Map(arcade.Window):
+class Map():
 
     def __init__(self):
         super().__init__()
@@ -94,15 +87,10 @@ class Map(arcade.Window):
         for row in map:
             x = 0
             for element in row:
-
                 if element == "." or element == "-" or element == "G":
                     arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.BLACK)
-                    if element == ".":
-                        self.food_list.draw()
                 elif element == "=":
                     arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.WHITE)
-                elif element == "%":
-                    self.brick_list.draw()
                 x += 20
             y -= 20
 
@@ -110,46 +98,44 @@ class Map(arcade.Window):
         global MAP_HEIGHT, map
 
         y = MAP_HEIGHT
+        y = MAP_HEIGHT
 
         for row in map:
             x = 0
             for element in row:
                 if element == "%":
-                    brick_scale = 0.01
-                    brick = arcade.Sprite("images/blue.png", brick_scale)
-
-                    brick.center_x = x + 10
-                    brick.center_y = y - 10
-
+                    brick = arcade.Sprite("images/blue.png", center_x=x + 10, center_y=y - 25, scale=0.01)
                     self.brick_list.append(brick)
 
                 elif element == ".":
-                    food_scale = 0.03
-                    food = arcade.Sprite("images/food.png", food_scale)
-
-                    food.center_x = x + 10
-                    food.center_y = y - 10
-
+                    food = arcade.Sprite("images/food.png", center_x=x + 10, center_y=y - 25, scale=0.03)
                     self.food_list.append(food)
 
                 x += 20
             y -= 20
+        arcade.schedule(self.update, 1 / 60)
 
-class Player(arcade.Window):
+    def update(self):
+        self.brick_list.update()
+        self.food_list.update()
+
+class Player(arcade.Sprite):
 
     def __init__(self):
         super().__init__()
-        character_scale = 0.1
-        self.player = arcade.Sprite("images/pacman.png", character_scale)
         self.setup()
         self.draw()
 
     def setup(self):
+        # self.player = arcade.Sprite("images/pacman.png", center_x=280, center_y=155, scale=0.008)
         self.score = 0
-        self.player.center_x = 270
-        self.player.center_y = 180
-    def draw(self):
-        self.player.draw()
+        self.append_texture("images/pacman.png")
+        self.center_x = 280
+        self.center_y = 155
+        self.scale = 0.008
+
+    #def draw(self):
+        #self.player.draw()
 
     def move(self, direction, movement):
 
@@ -166,45 +152,44 @@ class Player(arcade.Window):
                 self.player.change_x = -MOVEMENT_SPEED
 
 class MyGame(arcade.Window):
-    player = Player()
-    map = Map()
+
+    def __init__(self, WIDTH, HEIGHT, TITLE):
+        super().__init__(WIDTH, HEIGHT, TITLE)
+        self.player = Player()
+        self.map = Map()
+        self.setup()
 
     def setup(self):
-
         arcade.set_background_color(arcade.color.BLUE)
-        arcade.schedule(self.update, 1 / 60)
+        #self.player.setup()
+        #self.map.setup()
 
-        arcade.run()
+    def update(self, delta_time):
+        self.map.food_list.update()
+        self.map.brick_list.update()
+        self.player.update()
 
-    def update(delta_time):
-        global map
-        map.food_list.update()
-        # Generate a list of all sprites that collided with the player.
-        hit_list = arcade.check_for_collision_with_list(player, map.food_list)
+        hit_list = arcade.check_for_collision_with_list(self.player, self.map.food_list)
 
-        # Loop through each colliding sprite, remove it, and add to the score.
         for food in hit_list:
-            food.kill()  # is this how to remove food sprite
-            player.score += 1
+            food.kill()
+            self.player.score += 1
 
     def on_draw(self):
-        global player, map
         self.player.draw()
         self.map.draw_map()
+        self.map.food_list.draw()
+        self.map.brick_list.draw()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
-            player.move(self, "y", MOVEMENT_SPEED)  # refer to the player in setup
-
+            self.player.move(self, "y", MOVEMENT_SPEED)
         elif key == arcade.key.DOWN:
-            player.move(self, "y", -MOVEMENT_SPEED)  # refer to the player in setup
-
+            self.player.move(self, "y", -MOVEMENT_SPEED)
         elif key == arcade.key.LEFT:
-            player.move(self, "x", -MOVEMENT_SPEED)  # refer to the player in setup
-
+            self.player.move(self, "x", -MOVEMENT_SPEED)
         elif key == arcade.key.RIGHT:
-            player.move(self, "x", MOVEMENT_SPEED)  # refer to the player in setup
-
+            self.player.move(self, "x", MOVEMENT_SPEED)
         elif key == arcade.key.ENTER:
             pass
 
@@ -213,6 +198,6 @@ def main():
     window.setup()
     arcade.run()
 
-
 if __name__ == '__main__':
+    #MyGame.setup()
     main()
