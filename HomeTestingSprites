@@ -8,6 +8,7 @@ MOVEMENT_SPEED = 5
 MAP_WIDTH = 28 * 20
 MAP_HEIGHT = 32 * 20
 
+player_direction = ""
 
 class Ghost(arcade.Sprite):
     def __init__(self):
@@ -106,27 +107,37 @@ class Map(arcade.Window):
     def update(self, delta_time):
         self.brick_list.update()
         self.food_list.update()
+
+        print(player_direction)
+        if player_direction == "U":
+            self.player.change_y = MOVEMENT_SPEED
+        elif player_direction == "D":
+            self.player.change_y = -MOVEMENT_SPEED
+        elif player_direction == "L":
+            self.player.change_x = -MOVEMENT_SPEED
+        elif player_direction == "R":
+            self.player.change_x = MOVEMENT_SPEED
         self.player.update()
 
     def on_key_press(self, key, modifiers):
+        global player_direction
         if key == arcade.key.UP:
-            self.player.change_y = MOVEMENT_SPEED
+            player_direction = "U"
         elif key == arcade.key.DOWN:
-            self.player.change_y = -MOVEMENT_SPEED
+            player_direction = "D"
         elif key == arcade.key.LEFT:
-            self.player.change_x = -MOVEMENT_SPEED
+            player_direction = "L"
         elif key == arcade.key.RIGHT:
-            self.player.change_x = MOVEMENT_SPEED
+            player_direction = "R"
         elif key == arcade.key.ENTER:
             pass
 
 class Player(arcade.Sprite):
-
     def __init__(self, filename="images/pacman.png", center_x=280, center_y=155, scale=0.008):
         super().__init__(filename = filename, center_x = center_x, center_y=center_y, scale = scale)
 
-    def on_draw(self):
-        self.draw()
+    """def on_draw(self):
+        self.draw()"""
 
 class MyGame():
     def __init__(self):
