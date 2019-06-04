@@ -4,43 +4,10 @@ import os
 WIDTH = 560
 HEIGHT = 620
 TITLE = "Pacman"
-MOVEMENT_SPEED = 10
+MOVEMENT_SPEED = 5
 MAP_WIDTH = 28 * 20
 MAP_HEIGHT = 32 * 20
 
-map = [
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-    "%............%%............%",
-    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-    "%..........................%",
-    "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
-    "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
-    "%......%%....%%....%%......%",
-    "%%%%%%.%%%%%-%%-%%%%%.%%%%%%",
-    "-----%.%%%%%-%%-%%%%%.%-----",
-    "-----%.%%----------%%.%-----",
-    "-----%.%%-%%%==%%%-%%.%-----",
-    "%%%%%%.%%-%G----G%-%%.%%%%%%",
-    "------.---%------%---.------",
-    "%%%%%%.%%-%G----G%-%%.%%%%%%",
-    "-----%.%%-%%%%%%%%-%%.%-----",
-    "-----%.%%----------%%.%-----",
-    "-----%.%%-%%%%%%%%-%%.%-----",
-    "%%%%%%.%%-%%%%%%%%-%%.%%%%%%",
-    "%............%%............%",
-    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-    "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
-    "%...%%.......--.......%%...%",
-    "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
-    "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
-    "%......%%....%%....%%......%",
-    "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
-    "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
-    "%..........................%",
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-]
 
 class Ghost(arcade.Sprite):
     def __init__(self):
@@ -65,46 +32,63 @@ class Ghost(arcade.Sprite):
         # choose next move until hit wall
         pass
 
-class Map():
+class Map(arcade.Window):
+    map = [
+        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "%............%%............%",
+        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+        "%..........................%",
+        "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
+        "%.%%%%.%%.%%%%%%%%.%%.%%%%.%",
+        "%......%%....%%....%%......%",
+        "%%%%%%.%%%%%-%%-%%%%%.%%%%%%",
+        "-----%.%%%%%-%%-%%%%%.%-----",
+        "-----%.%%----------%%.%-----",
+        "-----%.%%-%%%%%%%%-%%.%-----",
+        "%%%%%%.%%-%------%-%%.%%%%%%",
+        "------.---%------%---.------",
+        "%%%%%%.%%-%------%-%%.%%%%%%",
+        "-----%.%%-%%%%%%%%-%%.%-----",
+        "-----%.%%----------%%.%-----",
+        "-----%.%%-%%%%%%%%-%%.%-----",
+        "%%%%%%.%%-%%%%%%%%-%%.%%%%%%",
+        "%............%%............%",
+        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+        "%.%%%%.%%%%%.%%.%%%%%.%%%%.%",
+        "%...%%.......--.......%%...%",
+        "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
+        "%%%.%%.%%.%%%%%%%%.%%.%%.%%%",
+        "%......%%....%%....%%......%",
+        "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
+        "%.%%%%%%%%%%.%%.%%%%%%%%%%.%",
+        "%..........................%",
+        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    ]
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, WIDTH, HEIGHT, TITLE):
+        super().__init__(WIDTH, HEIGHT, TITLE)
 
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
 
         self.brick_list = arcade.SpriteList()
         self.food_list = arcade.SpriteList()
+        self.player = Player()
 
         self.setup()
 
-    def draw_map(self):
-        global MAP_HEIGHT, map
-        arcade.start_render()
-
-        y = MAP_HEIGHT
-
-        for row in map:
-            x = 0
-            for element in row:
-                if element == "." or element == "-" or element == "G":
-                    arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.BLACK)
-                elif element == "=":
-                    arcade.draw_lrtb_rectangle_filled(x, x + 20, y - 15, y - 35, arcade.color.WHITE)
-                x += 20
-            y -= 20
-
     def setup(self):
-        global MAP_HEIGHT, map
-
+        arcade.start_render()
+        arcade.set_background_color(arcade.color.BLUE)
         y = MAP_HEIGHT
-        y = MAP_HEIGHT
 
-        for row in map:
+        for row in Map.map:
             x = 0
             for element in row:
                 if element == "%":
-                    brick = arcade.Sprite("images/blue.png", center_x=x + 10, center_y=y - 25, scale=0.01)
+                    brick = arcade.Sprite("images/blue.png", center_x=x + 10, center_y=y - 25, scale=0.0385)
                     self.brick_list.append(brick)
 
                 elif element == ".":
@@ -113,61 +97,43 @@ class Map():
 
                 x += 20
             y -= 20
-        arcade.schedule(self.update, 1 / 60)
 
-    def update(self):
+    def on_draw(self):
+        self.brick_list.draw()
+        self.food_list.draw()
+        self.player.draw()
+
+    def update(self, delta_time):
         self.brick_list.update()
         self.food_list.update()
+        self.player.update()
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.UP:
+            self.player.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.player.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.player.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.player.change_x = MOVEMENT_SPEED
+        elif key == arcade.key.ENTER:
+            pass
 
 class Player(arcade.Sprite):
 
-    def __init__(self):
-        super().__init__()
-        self.setup()
+    def __init__(self, filename="images/pacman.png", center_x=280, center_y=155, scale=0.008):
+        super().__init__(filename = filename, center_x = center_x, center_y=center_y, scale = scale)
+
+    def on_draw(self):
         self.draw()
 
-    def setup(self):
-        # self.player = arcade.Sprite("images/pacman.png", center_x=280, center_y=155, scale=0.008)
-        self.score = 0
-        self.append_texture("images/pacman.png")
-        self.center_x = 280
-        self.center_y = 155
-        self.scale = 0.008
-
-    #def draw(self):
-        #self.player.draw()
-
-    def move(self, direction, movement):
-
-        if movement == MOVEMENT_SPEED:
-            if direction == "y":
-                self.player.change_y = MOVEMENT_SPEED
-            else:
-                self.player.change_x = MOVEMENT_SPEED
-
-        elif movement == -MOVEMENT_SPEED:
-            if direction == "y":
-                self.player.change_y = -MOVEMENT_SPEED
-            else:
-                self.player.change_x = -MOVEMENT_SPEED
-
-class MyGame(arcade.Window):
-
-    def __init__(self, WIDTH, HEIGHT, TITLE):
-        super().__init__(WIDTH, HEIGHT, TITLE)
-        self.player = Player()
-        self.map = Map()
-        self.setup()
-
-    def setup(self):
-        arcade.set_background_color(arcade.color.BLUE)
-        #self.player.setup()
-        #self.map.setup()
+class MyGame():
+    def __init__(self):
+        super().__init__()
+        self.map = Map(WIDTH, HEIGHT, TITLE)
 
     def update(self, delta_time):
-        self.map.food_list.update()
-        self.map.brick_list.update()
-        self.player.update()
 
         hit_list = arcade.check_for_collision_with_list(self.player, self.map.food_list)
 
@@ -175,29 +141,9 @@ class MyGame(arcade.Window):
             food.kill()
             self.player.score += 1
 
-    def on_draw(self):
-        self.player.draw()
-        self.map.draw_map()
-        self.map.food_list.draw()
-        self.map.brick_list.draw()
-
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.UP:
-            self.player.move(self, "y", MOVEMENT_SPEED)
-        elif key == arcade.key.DOWN:
-            self.player.move(self, "y", -MOVEMENT_SPEED)
-        elif key == arcade.key.LEFT:
-            self.player.move(self, "x", -MOVEMENT_SPEED)
-        elif key == arcade.key.RIGHT:
-            self.player.move(self, "x", MOVEMENT_SPEED)
-        elif key == arcade.key.ENTER:
-            pass
-
 def main():
-    window = MyGame(WIDTH, HEIGHT, TITLE)
-    window.setup()
+    window = MyGame()
     arcade.run()
 
 if __name__ == '__main__':
-    #MyGame.setup()
     main()
