@@ -87,8 +87,6 @@ class Map(arcade.Window):
                 x += 20
             y -= 20
 
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player, self.brick_list)
-
     def on_draw(self):
         arcade.start_render()
         if self.end_game:
@@ -135,48 +133,85 @@ class Map(arcade.Window):
 
         self.ghost.update()
         self.player.update()
-        self.physics_engine.update()
+        hit_list = arcade.check_for_collision_with_list(self.player, self.brick_list)
+
+        if len(hit_list) > 0:
+            self.player.change_y = 0
+            self.player.change_x = 0
+            self.player.player_direction = ""
+
+        if self.player.queue != "":
+            if len(arcade.check_for_collision_with_list(self.player.collision_check, self.brick_list)) == 0:
+                self.player.player_direction = self.player.queue
+                self.player.queue = ""
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
-            self.player.collision_check.center_y = self.player.center_y + 1
+            self.player.collision_check.center_y = self.player.center_y + 2
+            self.player.collision_check.center_x = self.player.center_x
+            
             if len(arcade.check_for_collision_with_list(self.player.collision_check, self.brick_list)) > 0:
                 self.player.queue = "U"
-                print("collision")
+                if self.player.player_direction == "L":
+                    self.player.collision_check.change_x = -MOVEMENT_SPEED
+                elif self.player.player_direction == "R":
+                    self.player.collision_check.change_x = MOVEMENT_SPEED
+
             else:
                 self.player.player_direction = "U"
 
         elif key == arcade.key.DOWN:
-            self.player.collision_check.center_y = self.player.center_y - 1
+            self.player.collision_check.center_y = self.player.center_y - 2
+            self.player.collision_check.center_x = self.player.center_x
+
             if len(arcade.check_for_collision_with_list(self.player.collision_check, self.brick_list)) > 0:
                 self.player.queue = "D"
-            else :
+                if self.player.player_direction == "L":
+                    self.player.collision_check.change_x = -MOVEMENT_SPEED
+                elif self.player.player_direction == "R":
+                    self.player.collision_check.change_x = MOVEMENT_SPEED
+            else:
                 self.player.player_direction = "D"
 
         elif key == arcade.key.LEFT:
-            self.player.collision_check.center_x = self.player.center_x - 1
+            self.player.collision_check.center_x = self.player.center_x - 2
+            self.player.collision_check.center_y = self.player.center_y
+
             if len(arcade.check_for_collision_with_list(self.player.collision_check, self.brick_list)) > 0:
                 self.player.queue = "L"
+                if self.player.player_direction == "D":
+                    self.player.collision_check.change_y = -MOVEMENT_SPEED
+                elif self.player.player_direction == "U":
+                    self.player.collision_check.change_y = MOVEMENT_SPEED
+
             else:
                 self.player.player_direction = "L"
 
         elif key == arcade.key.RIGHT:
-            self.player.collision_check.center_x = self.player.center_x + 1
+            self.player.collision_check.center_x = self.player.center_x + 2
+            self.player.collision_check.center_y = self.player.center_y
+
             if len(arcade.check_for_collision_with_list(self.player.collision_check, self.brick_list)) > 0:
                 self.player.queue = "R"
-                print("collision")
+                if self.player.player_direction == "U":
+                    self.player.collision_check.change_y = MOVEMENT_SPEED
+                elif self.player.player_direction == "D":
+                    self.player.collision_check.change_y = -MOVEMENT_SPEED
+
             else:
                 self.player.player_direction = "R"
+
         elif key == arcade.key.ENTER:
             pass
 
 class Player(arcade.Sprite):
-    def __init__(self, filename="images/pacman.png", scale=0.11):
+    def __init__(self, filename="images/pacman.png", scale=0.10):
         super().__init__(filename=filename, scale=scale)
-        self.collision_check =
+        self.collision_check = arcade.Sprite(filename="images/pacman.png", scale=0.10)
+
+        self.queue = ""
 
         self.score = 0
-        self.queue = ""
         self.player_direction = ""
 
 class Ghost(arcade.Sprite):
